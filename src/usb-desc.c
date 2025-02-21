@@ -67,7 +67,6 @@ char const* string_desc_arr[] = {
 uint8_t const* tud_descriptor_configuration_cb(uint8_t index) {
     (void) index;
     static_assert(sizeof(desc_configuration) == CONFIG_TOTAL_LEN, "Configuration descriptor size mismatch");
-    uint16_t size = sizeof(desc_configuration);
 
     return desc_configuration;
 }
