@@ -475,20 +475,18 @@ bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_requ
     static uint8_t ctrl_rsp[8];
     static uint8_t rsp_len;
 
+    // Used to test the diretion
+    bool dir_in = (request->bmRequestType_bit.direction == TUSB_DIR_IN) ? true : false; 
+
     INFO("Control transfer: if=0x%02x stage=%d req=0x%02x type=0x%02x dir=%s wValue=0x%04x wIndex=0x%04x wLength=%d",
         request->wIndex,
         stage,
         request->bRequest,
         request->bmRequestType_bit.type,
-        (request->bmRequestType & TUSB_DIR_IN) ? "IN" : "OUT",
+        dir_in ? "IN" : "OUT",
         request->wValue,
         request->wIndex,
         request->wLength);
-
-    if (!(request->bmRequestType & TUSB_DIR_IN)) {
-        INFO("Control transfer - Ignoring OUT request");
-        return false;
-    }
 
     if (request->bmRequestType_bit.type != TUSB_REQ_TYPE_CLASS) {
         INFO("Control transfer - Ignoring unexpected type 0x%02x", request->bmRequestType);
@@ -514,6 +512,14 @@ bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_requ
                 case CTRL_ECHO:
                     // Echo back the echo command
                     INFO("Control transfer - Echo");
+                    
+                    // This returns data so must be an IN request (i.e. the
+                    // host will accept data from the device)
+                    if (!dir_in) {
+                        INFO("Unexpected direction");
+                        return false;
+                    }
+
                     ctrl_rsp[0] = CTRL_ECHO;
                     rsp_len = 1;
                     break;
@@ -523,6 +529,13 @@ bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_requ
                     // to return data in this format or with these values in
                     // the general case
                     INFO("Control transfer - Init");
+
+                    // This returns data so must be an IN request (i.e. the
+                    // host will accept data from the device)
+                    if (!dir_in) {
+                        INFO("Unexpected direction");
+                        return false;
+                    }
 
                     // Initialized our protocol handling
                     init_protocol_handling(); 
@@ -538,12 +551,26 @@ bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_requ
                 case CTRL_RESET:
                     // No-op, and zero length response 
                     INFO("Control transfer - Reset");
+
+                    // This does not return data so must be an OUT request
+                    if (dir_in) {
+                        INFO("Unexpected direction");
+                        return false;
+                    }
+
                     rsp_len = 0;
                     break;
 
                 case CTRL_SHUTDOWN:
                     // No-op, and zero length response
                     INFO("Control transfer - Shutdown");
+
+                    // This does not return data so must be an OUT request
+                    if (dir_in) {
+                        INFO("Unexpected direction");
+                        return false;
+                    }
+
                     rsp_len = 0;
                     break;
 
@@ -551,6 +578,13 @@ bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_requ
                     // Log, flush the log, and then reboot in DFU
                     // (programming) mode 
                     INFO("Control transfer - Enter bootloader");
+
+                    // This does not return data so must be an OUT request
+                    if (dir_in) {
+                        INFO("Unexpected direction");
+                        return false;
+                    }
+
                     fflush(stdout);
                     enter_bootloader();
                     break;
@@ -559,6 +593,14 @@ bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_requ
                     // Return the git revision of this example source code.
                     // This is set up in CMkakeLists.txt
                     INFO("Control transfer - Git Revision");
+
+                    // This returns data so must be an IN request (i.e. the
+                    // host will accept data from the device)
+                    if (!dir_in) {
+                        INFO("Unexpected direction");
+                        return false;
+                    }
+
                     strncpy(ctrl_rsp, __GIT_REVISION__, sizeof(ctrl_rsp));
                     rsp_len = sizeof(ctrl_rsp);
                     break;
@@ -566,6 +608,14 @@ bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_requ
                 case CTRL_GCCVER:
                     // Return the GCC version used to compile the source.
                     // __VERSION__ is a standard GCC macro.
+
+                    // This returns data so must be an IN request (i.e. the
+                    // host will accept data from the device)
+                    if (!dir_in) {
+                        INFO("Unexpected direction");
+                        return false;
+                    }
+
                     INFO("Control transfer - GCC Version");
                     strncpy(ctrl_rsp, __VERSION__, sizeof(ctrl_rsp));
                     rsp_len = sizeof(ctrl_rsp);
@@ -574,13 +624,22 @@ bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_requ
                 case CTRL_SDKVER:
                     // Return the Pico SDK version used to build this example.
                     // PICO_SDK_VERSION_STRING is a standard Pico SDK macro.
+
+                    // This returns data so must be an IN request (i.e. the
+                    // host will accept data from the device)
+                    if (!dir_in) {
+                        INFO("Unexpected direction");
+                        return false;
+                    }
+
                     INFO("Control transfer - SDK Version");
                     strncpy(ctrl_rsp, PICO_SDK_VERSION_STRING, sizeof(ctrl_rsp));
                     rsp_len = sizeof(ctrl_rsp);
                     break;
 
                 default:
-                    INFO("Control transfer - Unsupported type: 0x%02x", request->bRequest);
+                    INFO("Control transfer - Unsupported type: 0x%02x, dir: %s",
+                        request->bRequest, dir_in ? "IN" : "OUT");
                     return false;
             }
 
