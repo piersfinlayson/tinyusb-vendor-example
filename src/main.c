@@ -20,7 +20,7 @@
 #include "pico/multicore.h"     // For multicore support
 #include "hardware/watchdog.h"  // For watchdog support
 
-// tinusb header files
+// tinyusb header files
 #include "tusb.h"               // Standard tinyusb header file
 #include "bsp/board_api.h"      // tinyusb's Pico specific header file
 
@@ -470,7 +470,7 @@ bool tud_vendor_control_xfer_cb(uint8_t rhport, uint8_t stage, tusb_control_requ
     static uint8_t ctrl_rsp[8];
     static uint8_t rsp_len;
 
-    // Used to test the diretion
+    // Used to test the direction
     bool dir_in = (request->bmRequestType_bit.direction == TUSB_DIR_IN) ? true : false; 
 
     INFO("Control transfer: if=0x%02x stage=%d req=0x%02x type=0x%02x dir=%s wValue=0x%04x wIndex=0x%04x wLength=%d",
