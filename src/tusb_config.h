@@ -59,7 +59,7 @@ extern "C" {
 #endif
 #define CFG_TUSB_DEBUG 0  // Increase number to enable tinyusb logging
 
-// Enable device
+// Enable device support
 #define CFG_TUD_ENABLED       1
 
 //--------------------------------------------------------------------
