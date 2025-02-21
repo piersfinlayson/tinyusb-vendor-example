@@ -71,7 +71,7 @@ This will create `tinyusb_vendor_example.uf2` in the build directory.
    - Copy the .uf2 file to the Pico drive, or
    - Use picotool:
      ```bash
-     picotool load tinyusb_vendor_example.elf
+     picotool load tinyusb-vendor-example.elf
      picotool reboot
      ```
 

@@ -15,10 +15,12 @@ add_executable(${PROJECT_NAME}
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE PICO_ENTER_USB_BOOT_ON_EXIT=1)
 
-# Setup up #define __GIT_REVISION__
+# Setup #define __GIT_REVISION__
 execute_process(
     COMMAND git rev-parse --short HEAD
     OUTPUT_VARIABLE GITREV
+    RESULT_VARIABLE GIT_RESULT
+    ERROR_VARIABLE GIT_ERROR
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 if(GIT_RESULT EQUAL 0)
