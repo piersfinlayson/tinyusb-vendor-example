@@ -41,12 +41,9 @@ uint8_t const* tud_descriptor_device_cb(void) {
 }
 
 // Configuration descriptor
-// If adding in other class descriptors, such as CDC:
-// - Add an interface to ITF_ enum (for CDC you need 2 interfaces, a CONTROL
-//   and a DATA in that order).
-// - Add TUD_CDC_DESCRIPTOR which needs three endpoints (which must be unique
-//   across the device - these are CMD, EP_OUT, EP_IN).  CMD and EP_IN must be
-//   ORed with 0x80.
+// Just need the TUD_CONFIG_DESCRIPTOR, and a TUD_VENDOR_DESCRIPTOR
+// You can add other descriptors here if you mix classes (e.g. add
+// a CDC descriptor as well to add a communications device)
 #define CONFIG_TOTAL_LEN (TUD_CONFIG_DESC_LEN + TUD_VENDOR_DESC_LEN)
 uint8_t static desc_configuration[] = {
     // Configuration descriptor
