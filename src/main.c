@@ -211,8 +211,7 @@ void maybe_send_data(void) {
         handled_data_len += sent;
 
         if (handled_data_len >= expected_data_len) {
-            // We send a status back after the READ has completed
-            send_status_response(STATUS_READY, handled_data_len);
+            // No status after READ completes
 
             // Now we've sent all the data, reset back to waiting for a
             // command
@@ -363,13 +362,9 @@ void tud_vendor_rx_cb(uint8_t itf, uint8_t const* buffer, uint16_t bufsize) {
                             // data from within our main loop
                             current_command = buffer[0];
                         } else {
-                            // Nothing to do - send back a zero status
-                            memset(status, 0, STATUS_LEN);
+                            // No bytes requested, so nothing to do
 
-                            INFO("Send status response: 0x%02x 0x%02x 0x%02x", status[0], status[1], status[2]);
-
-                            tud_vendor_write(status, STATUS_LEN);
-                            tud_vendor_write_flush();
+                            // Don't send back a status for a READ
 
                             // Reset back to waiting for a command
                             reset_data();

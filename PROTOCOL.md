@@ -39,7 +39,7 @@ Bytes 1-2: Data length (little-endian)
    - Device sends status response
 3. For READ commands:
    - Device sends data (if length > 0)
-   - Device sends status response
+   - Device does not send status response
 
 ### Example
 A typical READ command requesting 256 bytes:
