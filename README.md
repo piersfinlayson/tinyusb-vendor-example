@@ -12,6 +12,8 @@ TinyUSB is a powerful USB stack for embedded devices, but it suffers from limite
 
 This example demonstrates these concepts with extensive comments, providing a solid foundation for building your own USB devices.
 
+See [this video](https://youtu.be/f_c9s5aC1No) for an overview of the example, and how to build a vendor device implementation for the Pico using TinyUSB.  (Published 25th February 2025.)
+
 ## Features
 
 - Custom USB vendor device implementation
