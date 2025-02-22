@@ -122,7 +122,6 @@ Essential Defines:
 2. Monitor device enumeration
 3. Test all transfer types
 4. Verify descriptor values
-5. Check USB compliance
 
 ## Related Documentation
 
