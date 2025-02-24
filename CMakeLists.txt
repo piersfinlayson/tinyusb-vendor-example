@@ -14,6 +14,7 @@ add_executable(${PROJECT_NAME}
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE PICO_ENTER_USB_BOOT_ON_EXIT=1)
+target_compile_definitions(${PROJECT_NAME} PRIVATE PICO_PRINTF_ALWAYS_INCLUDED=1)
 
 # Setup #define __GIT_REVISION__
 execute_process(
