@@ -2,6 +2,8 @@
 
 This project provides a working example of implementing a USB vendor class device using the TinyUSB stack on a Raspberry Pi Pico. It was created to address the lack of comprehensive documentation and examples for implementing custom USB devices with TinyUSB.
 
+Update: There is now an equivalent Rust example using [`Embassy`](https://github.com/embassy-rs/embassy) - you can find it at [`embassy-usb-vendor-example`](https://github.com/piersfinlayson/embassy-usb-vendor-example).  Both implementations are designed to be compatible and near-identical.  The scripts in [`scripts/`] from this example can be used to test both device firmwares.
+
 ## Why This Exists
 
 TinyUSB is a powerful USB stack for embedded devices, but it suffers from limited documentation and a scarcity of real-world examples, particularly for vendor-specific devices. This makes it challenging for developers to:
